@@ -3,13 +3,8 @@ from enum import Enum
 from tortoise import fields
 from tortoise.models import Model
 
-
-class PokeMoveCategories(str, Enum):
-    """Possibles Pokemon moves Categories."""
-
-    physical: str = "Physical"
-    special: str = "Special"
-    status: str = "Status"
+from .poketype import PokeType
+from .pokemove import PokeMove
 
 
 class PokeGenders(str, Enum):
@@ -17,21 +12,6 @@ class PokeGenders(str, Enum):
 
     male: str = "Male"
     female: str = "Female"
-
-
-class PokeType(Model):
-    """PokeType DataBase Model."""
-
-    name: str = fields.CharField(pk=True, max_length=100)
-
-
-class PokeMove(Model):
-    """PokeMove DataBase Model."""
-
-    name: str = fields.CharField(max_length=100)
-    effect: str = fields.TextField()
-    type: PokeType = fields.ForeignKeyField("models.PokeType")
-    category: PokeMoveCategories = fields.CharEnumField(PokeMoveCategories)
 
 
 class Pokemon(Model):
