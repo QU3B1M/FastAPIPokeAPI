@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     """PokeAPI Settings"""
 
     database_url: str = "sqlite://:memory:"  # Default is a sqlite in memory
-    database_models: list = ["api.models"]
+    database_models: list = ["api.database.models"]
 
     class Config:
         case_sensitive: bool = True

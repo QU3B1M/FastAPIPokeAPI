@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List
 
 from tortoise import fields
 from tortoise.models import Model
@@ -21,5 +22,5 @@ class Pokemon(Model):
     name: str = fields.CharField(max_length=100, unique=True)
     description: str = fields.TextField()
     gender: PokeGenders = fields.CharEnumField(PokeGenders)
-    types: list[PokeType] = fields.ManyToManyField("models.PokeType")
-    moves: list[PokeMove] = fields.ManyToManyField("models.PokeType")
+    types: List[PokeType] = fields.ManyToManyField("models.PokeType")
+    moves: List[PokeMove] = fields.ManyToManyField("models.PokeType")
