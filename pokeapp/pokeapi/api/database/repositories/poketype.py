@@ -1,5 +1,5 @@
 from .base import BaseRepository
-from ..models import PokeType
+from ..schemas import PokeType
 
 
 # TODO Update the BaseRepo Models as they are created

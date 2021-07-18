@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 
 from api.database.db import init_db, close_db
+from api.routers import api_routers
 
 app = FastAPI()
+
+app.include_router(api_routers)
 
 
 @app.on_event("startup")

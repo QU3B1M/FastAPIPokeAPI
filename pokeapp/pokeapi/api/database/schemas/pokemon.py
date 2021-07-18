@@ -4,6 +4,8 @@ from typing import List
 from tortoise import fields
 from tortoise.models import Model
 
+# from tortoise.contrib.pydantic import pydantic_model_creator
+
 from .poketype import PokeType
 from .pokemove import PokeMove
 
@@ -21,6 +23,9 @@ class Pokemon(Model):
     id: int = fields.IntField(pk=True)
     name: str = fields.CharField(max_length=100, unique=True)
     description: str = fields.TextField()
-    gender: PokeGenders = fields.CharEnumField(PokeGenders)
+    # gender: PokeGenders = fields.CharEnumField(PokeGenders)
     types: List[PokeType] = fields.ManyToManyField("models.PokeType")
     moves: List[PokeMove] = fields.ManyToManyField("models.PokeMove")
+
+
+# Pokemon = pydantic_model_creator(Pokemon, name="Pokemon")

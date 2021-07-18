@@ -1,5 +1,5 @@
 from .base import BaseRepository
-from ..models import PokeMove
+from ..schemas import PokeMove
 
 
 # TODO Update the BaseRepo Models as they are created
