@@ -23,4 +23,4 @@ class Pokemon(Model):
     description: str = fields.TextField()
     gender: PokeGenders = fields.CharEnumField(PokeGenders)
     types: List[PokeType] = fields.ManyToManyField("models.PokeType")
-    moves: List[PokeMove] = fields.ManyToManyField("models.PokeType")
+    moves: List[PokeMove] = fields.ManyToManyField("models.PokeMove")
