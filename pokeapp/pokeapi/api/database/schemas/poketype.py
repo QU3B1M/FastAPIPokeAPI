@@ -13,7 +13,12 @@ class PokeType(BaseSchema):
 
     async def to_pydantic(self):
         """Returns a Pydantic version of the DataBase Model"""
-        return await PydanticPokeType.from_tortoise_orm(self)
+        return await _PydanticPokeType.from_tortoise_orm(self)
+
+    async def dict(self):
+        """Returns an Dict version of the DataBase Model."""
+        poketype: _PydanticPokeType = await self.to_pydantic()
+        return poketype.dict()
 
 
-PydanticPokeType = pydantic_model_creator(PokeType, name="PokeType")
+_PydanticPokeType = pydantic_model_creator(PokeType, name="PokeType")

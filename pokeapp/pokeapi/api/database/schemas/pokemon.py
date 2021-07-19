@@ -28,11 +28,12 @@ class Pokemon(BaseSchema):
 
     async def to_pydantic(self):
         """Returns a Pydantic version of the DataBase Model"""
-        return await PydanticPokemon.from_tortoise_orm(self)
+        return await _PydanticPokemon.from_tortoise_orm(self)
 
-    async def dict(self) -> dict:
+    async def dict(self):
         """Returns an Dict version of the DataBase Model."""
-        self.to_pydantic()
+        pokemon: _PydanticPokemon = await self.to_pydantic()
+        return {**pokemon.dict(), "types": await self.types, "moves": await self.moves}
 
 
-PydanticPokemon = pydantic_model_creator(Pokemon, name="Pokemon")
+_PydanticPokemon = pydantic_model_creator(Pokemon, name="Pokemon")

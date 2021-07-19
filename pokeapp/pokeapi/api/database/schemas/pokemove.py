@@ -26,12 +26,12 @@ class PokeMove(BaseSchema):
 
     async def to_pydantic(self):
         """Returns a Pydantic version of the DataBase Model"""
-        return await PydanticPokeMove.from_tortoise_orm(self)
+        return await _PydanticPokeMove.from_tortoise_orm(self)
 
     async def dict(self):
         """Returns an Dict version of the DataBase Model."""
-        pokemove: PydanticPokeMove = await self.to_pydantic()
+        pokemove: _PydanticPokeMove = await self.to_pydantic()
         return {**pokemove.dict(), "type": await self.type}
 
 
-PydanticPokeMove = pydantic_model_creator(PokeMove, name="PokeMove")
+_PydanticPokeMove = pydantic_model_creator(PokeMove, name="PokeMove")
