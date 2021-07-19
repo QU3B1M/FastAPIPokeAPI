@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
-from api.database.db import init_db, close_db
-from api.routers import api_routers
+from api import api_routers, init_db, close_db
 
 app = FastAPI()
 

@@ -1,12 +1,13 @@
+from typing import List
 from fastapi import APIRouter
 
-from ..database.repositories.pokemon import PokemonRepository
-from ..models.pokemon import PokemonIn, PokemonOut
+from ..database.repositories import PokemonRepository
+from ..models import PokemonIn, PokemonOut
 
 router = APIRouter(prefix="/pokemon", tags=["Pokemons"])
 
 
-@router.get("/")
+@router.get("/", response_model=List[PokemonOut])
 async def get_all_pokemons():
     """
     ## Retrieves a Pokemon List.
@@ -23,12 +24,13 @@ async def get_all_pokemons():
     -------
         List[Pokemon]
     """
+    return await PokemonRepository.get_all()
 
 
-@router.get("/{id}")
+@router.get("/{id}", response_model=PokemonOut)
 async def get_pokemon(id: int):
     """
-    ## Retrieves a Pokemon List.
+    ## Retrieves a Pokemon by ID.
 
     Path Parameters
     ---------------
@@ -44,21 +46,83 @@ async def get_pokemon(id: int):
         id: int                 Pokemon ID.
         name: str               Name of the Pokemon.
         description: str        Description of the Pokemon
-        gender: PokeGenders     Gender of the Pokemon (M/F)
         types: List[PokeType]   Type/s of the Pokemon
         moves: List[PokeMove]   Move/s of the Pokemon
 
     """
+    return await PokemonRepository.get(id=id)
 
 
 @router.post("/create", response_model=PokemonOut)
 async def create_pokemon(poke_in: PokemonIn):
     """
-    ## Retrieves a Pokemon List.
+    ## Creates a Pokemon.
 
     Path Parameters
     ---------------
+        None
+
+    Body Parameters
+    ---------------
         id: int                 Pokemon ID.
+        name: str               Name of the Pokemon.
+        description: str        Description of the Pokemon.
+        types_id: List[int]     IDs of the Pokemon type/s.
+        moves_id: List[int]     IDs of the Pokemon Move/s.
+
+
+    Returns
+    -------
+
+        id: int                 Pokemon ID.
+        name: str               Name of the Pokemon.
+        description: str        Description of the Pokemon.
+        types: List[PokeType]   Type/s of the Pokemon.
+        moves: List[PokeMove]   Move/s of the Pokemon.
+
+    """
+    return await PokemonRepository.create(poke_in)
+
+
+@router.put("/update/{id}", response_model=PokemonOut)
+async def update_pokemon(id: int, poke_in: PokemonIn):
+    """
+    ## Updates a Pokemon by ID.
+
+    Path Parameters
+    ---------------
+        id:int                  Pokemon ID.
+
+    Body Parameters
+    ---------------
+        id: int                 Pokemon ID.
+        name: str               Name of the Pokemon.
+        description: str        Description of the Pokemon.
+        types_id: List[int]     IDs of the Pokemon type/s.
+        moves_id: List[int]     IDs of the Pokemon Move/s.
+
+
+    Returns
+    -------
+
+        id: int                 Pokemon ID.
+        name: str               Name of the Pokemon.
+        description: str        Description of the Pokemon.
+        types: List[PokeType]   Type/s of the Pokemon.
+        moves: List[PokeMove]   Move/s of the Pokemon.
+
+    """
+    return await PokemonRepository.update(poke_in, id=id)
+
+
+@router.delete("/delete/{id}", response_model=bool)
+async def delete_pokemon(id: int):
+    """
+    ## Deletes a Pokemon by ID.
+
+    Path Parameters
+    ---------------
+        Pokemon ID.
 
     Body Parameters
     ---------------
@@ -67,12 +131,7 @@ async def create_pokemon(poke_in: PokemonIn):
     Returns
     -------
 
-        id: int                 Pokemon ID.
-        name: str               Name of the Pokemon.
-        description: str        Description of the Pokemon
-        gender: PokeGenders     Gender of the Pokemon (M/F)
-        types: List[PokeType]   Type/s of the Pokemon
-        moves: List[PokeMove]   Move/s of the Pokemon
+        None
 
     """
-    return await PokemonRepository.create(poke_in)
+    return await PokemonRepository.delete(id=id)

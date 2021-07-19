@@ -54,3 +54,8 @@ class BaseRepository(Generic[DBModelType, CreateModelType, UpdateModelType]):
     async def delete(cls, **kwargs) -> None:
         """Default method to Delete an DataBase Record."""
         return await cls.model.get(**kwargs).delete()
+
+    @classmethod
+    async def exists(cls, **kwargs) -> None:
+        """Default method to check if exists an DataBase Record."""
+        return await cls.model.exists(**kwargs)

@@ -12,9 +12,8 @@ class PokemonBase(BaseModel):
 
 
 class PokemonIn(PokemonBase):
-    pass
-    # types_ids: List[int]
-    # moves_ids: List[int]
+    types_ids: List[int]
+    moves_ids: List[int]
 
 
 class PokemonOut(PokemonBase):
