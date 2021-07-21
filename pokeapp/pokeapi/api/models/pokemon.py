@@ -1,21 +1,7 @@
-from typing import List, Optional
-from pydantic import BaseModel
+from tortoise.contrib.pydantic import pydantic_model_creator
 
-from .poketype import PokeTypeBase
-from .pokemove import PokeMoveBase
+from api.database.schemas import Pokemon
 
 
-class PokemonBase(BaseModel):
-    id: int
-    name: str
-    description: str
-
-
-class PokemonIn(PokemonBase):
-    types_ids: List[int]
-    moves_ids: List[int]
-
-
-class PokemonOut(PokemonBase):
-    types: Optional[List[PokeTypeBase]]
-    moves: Optional[List[PokeMoveBase]]
+PokemonOut = pydantic_model_creator(Pokemon, name="Pokemon")
+PokemonIn = pydantic_model_creator(Pokemon, name="PokemonIn", exclude_readonly=True)

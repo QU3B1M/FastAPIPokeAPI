@@ -1,8 +1,9 @@
 from typing import List
 from fastapi import APIRouter
 
-from ..database.repositories import PokeTypeRepository
-from ..models import PokeTypeIn, PokeTypeOut
+from api.repositories import PokeTypeRepository
+from api.models import PokeTypeIn, PokeTypeOut
+
 
 router = APIRouter(prefix="/poketype", tags=["PokeTypes"])
 
@@ -75,7 +76,7 @@ async def create_poketype(poke_in: PokeTypeIn):
     return await PokeTypeRepository.create(poke_in)
 
 
-@router.put("/update/{id}", response_model=PokeTypeOut)
+@router.put("/update/{id}", response_model=int)
 async def update_poketype(id: int, poke_in: PokeTypeIn):
     """
     ## Updates a PokeType by ID.
@@ -92,9 +93,7 @@ async def update_poketype(id: int, poke_in: PokeTypeIn):
 
     Returns
     -------
-        id: int             PokeType ID.
-        name: str           Name of the PokeType.
-        description: str    Description of the PokeType.
+        status: int
 
     """
     return await PokeTypeRepository.update(poke_in, id=id)

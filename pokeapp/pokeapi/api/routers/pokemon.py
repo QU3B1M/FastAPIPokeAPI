@@ -1,8 +1,8 @@
 from typing import List
 from fastapi import APIRouter
 
-from ..database.repositories import PokemonRepository
-from ..models import PokemonIn, PokemonOut
+from api.repositories import PokemonRepository
+from api.models import PokemonIn, PokemonOut
 
 router = APIRouter(prefix="/pokemon", tags=["Pokemons"])
 
@@ -84,7 +84,7 @@ async def create_pokemon(poke_in: PokemonIn):
     return await PokemonRepository.create(poke_in)
 
 
-@router.put("/update/{id}", response_model=PokemonOut)
+@router.put("/update/{id}", response_model=int)
 async def update_pokemon(id: int, poke_in: PokemonIn):
     """
     ## Updates a Pokemon by ID.
@@ -104,12 +104,7 @@ async def update_pokemon(id: int, poke_in: PokemonIn):
 
     Returns
     -------
-
-        id: int                 Pokemon ID.
-        name: str               Name of the Pokemon.
-        description: str        Description of the Pokemon.
-        types: List[PokeType]   Type/s of the Pokemon.
-        moves: List[PokeMove]   Move/s of the Pokemon.
+        status: int
 
     """
     return await PokemonRepository.update(poke_in, id=id)

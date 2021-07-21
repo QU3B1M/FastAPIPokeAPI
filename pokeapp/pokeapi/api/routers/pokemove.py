@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from ..database.schemas import PokeMove
-from ..database.repositories import PokeMoveRepository, PokeTypeRepository
-from ..models import PokeMoveIn, PokeMoveOut
+from api.database.schemas import PokeMove
+from api.repositories import PokeMoveRepository, PokeTypeRepository
+from api.models import PokeMoveOut, PokeMoveIn
 
 
 router = APIRouter(prefix="/pokemove", tags=["PokeMoves"])
@@ -27,8 +27,7 @@ async def get_all_pokemoves():
     -------
         List[PokeMove]
     """
-    moves: List[PokeMove] = await PokeMoveRepository.get_all()
-    return [await move.dict() for move in moves]
+    return await PokeMoveRepository.get_all()
 
 
 @router.get("/{id}", response_model=PokeMoveOut)
@@ -57,7 +56,7 @@ async def get_pokemove(id: int):
     if not pokemove:
         raise HTTPException(404, detail="PokeMove not found.")
 
-    return await pokemove.dict()
+    return pokemove
 
 
 @router.post("/create", response_model=PokeMoveOut)
@@ -86,16 +85,13 @@ async def create_pokemove(poke_in: PokeMoveIn):
         category:str [physical/special/status]  Category of the PokeMove.
 
     """
-
     if not await PokeTypeRepository.exists(id=poke_in.type_id):
+        # The PokeType didnt exist, so raise an error.
         raise HTTPException(status_code=422, detail="Invalid type_id (PokeType).")
-    # Creates the PokeMove
-    pokemove: PokeMove = await PokeMoveRepository.create(poke_in)
-
-    return await pokemove.dict()
+    return await PokeMoveRepository.create(poke_in)
 
 
-@router.put("/update/{id}", response_model=PokeMoveOut)
+@router.put("/update/{id}", response_model=int)
 async def update_pokemove(id: int, poke_in: PokeMoveIn):
     """
     ## Updates a PokeMove by ID.
@@ -114,11 +110,7 @@ async def update_pokemove(id: int, poke_in: PokeMoveIn):
 
     Returns
     -------
-        id: int                                 PokeMove ID.
-        name: str                               Name of the PokeMove.
-        effect: str                             Effect of the PokeMove.
-        type: PokeTypeBase                      Type of the PokeMove.
-        category:str [physical/special/status]  Category of the PokeMove.
+        status: int
 
     """
     if not await PokeMoveRepository.exists(id=id):

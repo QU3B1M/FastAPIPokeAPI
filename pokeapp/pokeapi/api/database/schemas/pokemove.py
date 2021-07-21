@@ -1,7 +1,6 @@
 from enum import Enum
 
 from tortoise import fields
-from tortoise.contrib.pydantic import pydantic_model_creator
 
 from .base import BaseSchema
 from .poketype import PokeType
@@ -24,14 +23,5 @@ class PokeMove(BaseSchema):
     type: PokeType = fields.ForeignKeyField("models.PokeType")
     category: PokeMoveCategories = fields.CharEnumField(PokeMoveCategories)
 
-    async def to_pydantic(self):
-        """Returns a Pydantic version of the DataBase Model"""
-        return await _PydanticPokeMove.from_tortoise_orm(self)
-
-    async def dict(self):
-        """Returns an Dict version of the DataBase Model."""
-        pokemove: _PydanticPokeMove = await self.to_pydantic()
-        return {**pokemove.dict(), "type": await self.type}
-
-
-_PydanticPokeMove = pydantic_model_creator(PokeMove, name="PokeMove")
+    class PydanticMeta:
+        exclude = ["pokemons"]
