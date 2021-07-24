@@ -54,8 +54,8 @@ async def get_pokemove(id: int):
     """
     pokemove: PokeMove = await PokeMoveRepository.get(id=id)
     if not pokemove:
+        # Non-existent Pokemove.
         raise HTTPException(404, detail="PokeMove not found.")
-
     return pokemove
 
 
@@ -86,7 +86,7 @@ async def create_pokemove(poke_in: PokeMoveIn):
 
     """
     if not await PokeTypeRepository.exists(id=poke_in.type_id):
-        # The PokeType didnt exist, so raise an error.
+        # Non-existent Poketype, so we cant create a move with that type...
         raise HTTPException(status_code=422, detail="Invalid type_id (PokeType).")
     return await PokeMoveRepository.create(poke_in)
 
@@ -114,9 +114,11 @@ async def update_pokemove(id: int, poke_in: PokeMoveIn):
 
     """
     if not await PokeMoveRepository.exists(id=id):
-        raise HTTPException(status_code=404, detail="PokeMove not found.")
+        # Non-existent Pokemove, we cant update it :(.
+        raise HTTPException(status_code=404, detail="Non-existent PokeMove.")
 
     if not await PokeTypeRepository.exists(id=poke_in.type_id):
+        # Non-existent Poketype, so we cant update a move using that type...
         raise HTTPException(status_code=422, detail="Invalid type_id (PokeType).")
 
     return await PokeMoveRepository.update(poke_in, id=id)
@@ -142,5 +144,6 @@ async def delete_pokemove(id: int):
 
     """
     if not await PokeMoveRepository.exists(id=id):
+        # Non-existent Pokemove, there is no need to delete it :).
         raise HTTPException(status_code=404, detail="PokeMove not found.")
     return await PokeMoveRepository.delete(id=id)

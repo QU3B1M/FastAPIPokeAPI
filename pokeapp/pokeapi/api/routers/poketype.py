@@ -101,9 +101,9 @@ async def update_poketype(id: int, poke_in: PokeTypeIn):
         status: int
 
     """
-    if not await PokeTypeRepository.get(id=id):
+    if not await PokeTypeRepository.exists(id=id):
         # Non-existent Poketype, so we cant update.
-        raise HTTPException(status_code=404, detail="Poketype not found.")
+        raise HTTPException(status_code=404, detail="Non-existent PokeType.")
     return await PokeTypeRepository.update(poke_in, id=id)
 
 
@@ -126,7 +126,7 @@ async def delete_poketype(id: int):
         None
 
     """
-    if not await PokeTypeRepository.get(id=id):
+    if not await PokeTypeRepository.exists(id=id):
         # Non-existent Poketype, so we cant delete.
-        raise HTTPException(status_code=404, detail="Poketype not found.")
+        raise HTTPException(status_code=404, detail="Non-existent PokeType.")
     return await PokeTypeRepository.update(id=id)
