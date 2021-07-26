@@ -1,2 +1,2 @@
+from .database import init_database
 from .routers import api_routers
-from .database.db import init_db, close_db

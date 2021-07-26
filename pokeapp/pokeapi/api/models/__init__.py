@@ -1,3 +1,3 @@
-from .pokemon import PokemonBase, PokemonIn, PokemonOut
-from .pokemove import PokeMoveBase, PokeMoveIn, PokeMoveOut
-from .poketype import PokeTypeBase, PokeTypeIn, PokeTypeOut
+from .pokemon import PokemonOut, PokemonIn, PokemonUpdate
+from .pokemove import PokeMoveOut, PokeMoveIn
+from .poketype import PokeTypeOut, PokeTypeIn

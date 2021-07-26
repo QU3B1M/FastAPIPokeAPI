@@ -1,20 +1,7 @@
-from pydantic import BaseModel
+from tortoise.contrib.pydantic import pydantic_model_creator
 
-from ..database.schemas import PokeMoveCategories
-from .poketype import PokeTypeBase
-
-
-class PokeMoveBase(BaseModel):
-
-    name: str
-    category: PokeMoveCategories
-    effect: str
+from api.database.schemas import PokeMove
 
 
-class PokeMoveIn(PokeMoveBase):
-    type_id: int
-
-
-class PokeMoveOut(PokeMoveBase):
-    type: PokeTypeBase
-    id: int
+PokeMoveOut = pydantic_model_creator(PokeMove, name="PokeMove")
+PokeMoveIn = pydantic_model_creator(PokeMove, name="PokeMoveIn", exclude_readonly=True)

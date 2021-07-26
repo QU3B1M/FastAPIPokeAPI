@@ -1,15 +1,7 @@
-from pydantic import BaseModel
+from tortoise.contrib.pydantic import pydantic_model_creator
+
+from api.database.schemas import PokeType
 
 
-class PokeTypeBase(BaseModel):
-
-    name: str
-    description: str
-
-
-class PokeTypeIn(PokeTypeBase):
-    pass
-
-
-class PokeTypeOut(PokeTypeBase):
-    id: int
+PokeTypeOut = pydantic_model_creator(PokeType, name="PokeType")
+PokeTypeIn = pydantic_model_creator(PokeType, name="PokeTypeIn", exclude_readonly=True)

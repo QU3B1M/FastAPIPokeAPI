@@ -1,4 +1,6 @@
+from fastapi import FastAPI
 from tortoise import Tortoise
+from tortoise.contrib.fastapi import register_tortoise
 
 from settings import Settings
 
@@ -6,15 +8,17 @@ from settings import Settings
 settings = Settings()
 
 
-async def init_db():
+def init_database(app: FastAPI):
     """Initializes the database connection"""
-    await Tortoise.init(
+    register_tortoise(
+        app,
         db_url=settings.database_url,
-        modules={"models": settings.database_models},
+        modules={
+            "models": settings.database_models,
+        },
+        generate_schemas=True,
+        add_exception_handlers=True,
     )
-    await Tortoise.generate_schemas()
 
 
-async def close_db():
-    """Closes the database connection"""
-    await Tortoise.close_connections()
+Tortoise.init_models(models_paths=settings.database_models, app_label="models")
