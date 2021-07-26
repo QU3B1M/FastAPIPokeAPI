@@ -8,7 +8,7 @@ from settings import Settings
 settings = Settings()
 
 
-def init_db(app: FastAPI):
+def init_database(app: FastAPI):
     """Initializes the database connection"""
     register_tortoise(
         app,
