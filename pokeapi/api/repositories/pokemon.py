@@ -28,7 +28,7 @@ class PokemonRepository(BaseRepository[Pokemon, PokemonIn, PokemonOut]):
         pokemon: Pokemon = cls.model.get(**kwargs)
         # Add and/or Delete the objects to the relation.
         await cls.add(pokemon, obj_in.types_to_add, obj_in.moves_to_add)
-        await cls.remove(pokemon, obj_in.types_to_delete, obj_in.moves_to_delete)
+        await cls.remove(pokemon, obj_in.types_to_remove, obj_in.moves_to_remove)
 
         if not isinstance(obj_in, dict):
             # Converts the object to a dict.
