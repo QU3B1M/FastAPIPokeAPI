@@ -1,8 +1,11 @@
 from typing import List
-from fastapi import APIRouter
 
-from ..database.repositories import PokemonRepository
-from ..models import PokemonIn, PokemonOut
+from fastapi import APIRouter, HTTPException
+
+from api.database.schemas import Pokemon
+from api.models import PokemonIn, PokemonOut, PokemonUpdate
+from api.repositories import PokemonRepository, PokeMoveRepository, PokeTypeRepository
+
 
 router = APIRouter(prefix="/pokemon", tags=["Pokemons"])
 
@@ -50,7 +53,10 @@ async def get_pokemon(id: int):
         moves: List[PokeMove]   Move/s of the Pokemon
 
     """
-    return await PokemonRepository.get(id=id)
+    pokemon: Pokemon = await PokemonRepository.get(id=id)
+    if not pokemon:  # Non existent pokemon.
+        raise HTTPException(status_code=404, detail="Non-existent Pokemon.")
+    return pokemon
 
 
 @router.post("/create", response_model=PokemonOut)
@@ -81,11 +87,24 @@ async def create_pokemon(poke_in: PokemonIn):
         moves: List[PokeMove]   Move/s of the Pokemon.
 
     """
+    # The pokemon needs PokeTypes and PokeMoves.
+    if not poke_in.types_ids:
+        raise HTTPException("Every Pokemon needs a type.")
+    if not poke_in.moves_ids:
+        raise HTTPException("Every have at least one move.")
+    # The PokeTypes and PokeMoves IDs should be valids.
+    for id in poke_in.types_ids:
+        if not await PokeTypeRepository.exists(id=id):
+            raise HTTPException(f"The id {id} doenst belong to any existent poketype.")
+    for id in poke_in.moves_ids:
+        if not await PokeMoveRepository.exists(id=id):
+            raise HTTPException(f"The id {id} doenst belong to any existent pokemove.")
+    # Now lets Create the Pokemon.
     return await PokemonRepository.create(poke_in)
 
 
-@router.put("/update/{id}", response_model=PokemonOut)
-async def update_pokemon(id: int, poke_in: PokemonIn):
+@router.put("/update/{id}", response_model=int)
+async def update_pokemon(id: int, poke_in: PokemonUpdate):
     """
     ## Updates a Pokemon by ID.
 
@@ -104,14 +123,19 @@ async def update_pokemon(id: int, poke_in: PokemonIn):
 
     Returns
     -------
-
-        id: int                 Pokemon ID.
-        name: str               Name of the Pokemon.
-        description: str        Description of the Pokemon.
-        types: List[PokeType]   Type/s of the Pokemon.
-        moves: List[PokeMove]   Move/s of the Pokemon.
+        status: int
 
     """
+    if not await PokemonRepository.exists(id=id):
+        # Non-existent Pokemon, we cant update it :(... maybe it evolved he..
+        raise HTTPException(status_code=404, detail="Non-existent Pokemon.")
+    # Every id should be valid.
+    for id in poke_in.types_to_add:
+        if not await PokeTypeRepository.exists(id=id):
+            raise HTTPException(f"The id {id} doenst belong to any existent poketype.")
+    for id in poke_in.moves_to_add:
+        if not await PokeMoveRepository.exists(id=id):
+            raise HTTPException(f"The id {id} doenst belong to any existent pokemove.")
     return await PokemonRepository.update(poke_in, id=id)
 
 
@@ -134,4 +158,7 @@ async def delete_pokemon(id: int):
         None
 
     """
+    if not await PokemonRepository.exists(id=id):
+        # Non-existent Pokemon, there is no need to delete it ;).
+        raise HTTPException(status_code=404, detail="Non-existent Pokemon.")
     return await PokemonRepository.delete(id=id)

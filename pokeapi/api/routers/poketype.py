@@ -1,8 +1,10 @@
 from typing import List
-from fastapi import APIRouter
 
-from ..database.repositories import PokeTypeRepository
-from ..models import PokeTypeIn, PokeTypeOut
+from fastapi import APIRouter, HTTPException
+
+from api.repositories import PokeTypeRepository
+from api.models import PokeTypeIn, PokeTypeOut
+
 
 router = APIRouter(prefix="/poketype", tags=["PokeTypes"])
 
@@ -47,7 +49,11 @@ async def get_poketype(id: int):
         description: str    Description of the PokeType.
 
     """
-    return await PokeTypeRepository.get(id=id)
+    poketype: PokeTypeOut = await PokeTypeRepository.get(id=id)
+    if not poketype:
+        # Non-existent Poketype.
+        raise HTTPException(status_code=404, detail="Poketype not found.")
+    return poketype
 
 
 @router.post("/create", response_model=PokeTypeOut)
@@ -75,7 +81,7 @@ async def create_poketype(poke_in: PokeTypeIn):
     return await PokeTypeRepository.create(poke_in)
 
 
-@router.put("/update/{id}", response_model=PokeTypeOut)
+@router.put("/update/{id}", response_model=int)
 async def update_poketype(id: int, poke_in: PokeTypeIn):
     """
     ## Updates a PokeType by ID.
@@ -92,11 +98,12 @@ async def update_poketype(id: int, poke_in: PokeTypeIn):
 
     Returns
     -------
-        id: int             PokeType ID.
-        name: str           Name of the PokeType.
-        description: str    Description of the PokeType.
+        status: int
 
     """
+    if not await PokeTypeRepository.exists(id=id):
+        # Non-existent Poketype, so we cant update.
+        raise HTTPException(status_code=404, detail="Non-existent PokeType.")
     return await PokeTypeRepository.update(poke_in, id=id)
 
 
@@ -119,4 +126,7 @@ async def delete_poketype(id: int):
         None
 
     """
+    if not await PokeTypeRepository.exists(id=id):
+        # Non-existent Poketype, so we cant delete.
+        raise HTTPException(status_code=404, detail="Non-existent PokeType.")
     return await PokeTypeRepository.update(id=id)

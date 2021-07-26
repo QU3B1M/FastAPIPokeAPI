@@ -2,7 +2,6 @@ from enum import Enum
 from typing import List
 
 from tortoise import fields
-from tortoise.contrib.pydantic import pydantic_model_creator
 
 from .base import BaseSchema
 from .poketype import PokeType
@@ -25,15 +24,3 @@ class Pokemon(BaseSchema):
     # gender: PokeGenders = fields.CharEnumField(PokeGenders)
     types: List[PokeType] = fields.ManyToManyField("models.PokeType")
     moves: List[PokeMove] = fields.ManyToManyField("models.PokeMove")
-
-    async def to_pydantic(self):
-        """Returns a Pydantic version of the DataBase Model"""
-        return await _PydanticPokemon.from_tortoise_orm(self)
-
-    async def dict(self):
-        """Returns an Dict version of the DataBase Model."""
-        pokemon: _PydanticPokemon = await self.to_pydantic()
-        return {**pokemon.dict(), "types": await self.types, "moves": await self.moves}
-
-
-_PydanticPokemon = pydantic_model_creator(Pokemon, name="Pokemon")
