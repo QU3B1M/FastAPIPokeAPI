@@ -23,5 +23,5 @@ class PokemonUpdate(PokemonBase):
 
     types_to_add: List[int]
     moves_to_add: List[int]
-    types_to_del: List[int]
-    moves_to_del: List[int]
+    types_to_remove: List[int]
+    moves_to_remove: List[int]
