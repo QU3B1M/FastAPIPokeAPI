@@ -1,9 +1,8 @@
 from tortoise import fields
+from tortoise.models import Model
 
-from .base import BaseSchema
 
-
-class PokeType(BaseSchema):
+class PokeType(Model):
     """PokeType DataBase Model."""
 
     id: int = fields.BigIntField(pk=True)
