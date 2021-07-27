@@ -1,8 +1,8 @@
 from enum import Enum
 
 from tortoise import fields
+from tortoise.models import Model
 
-from .base import BaseSchema
 from .poketype import PokeType
 
 
@@ -14,7 +14,7 @@ class PokeMoveCategories(str, Enum):
     status: str = "Status"
 
 
-class PokeMove(BaseSchema):
+class PokeMove(Model):
     """PokeMove DataBase Model."""
 
     id: int = fields.BigIntField(pk=True)
