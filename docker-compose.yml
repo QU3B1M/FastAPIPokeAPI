@@ -32,3 +32,14 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  # Starts the UsersAPI
+  users:
+    build: pokeusers/
+    restart: always
+    command: bash -c "python3 app.py"
+    volumes:
+      - ./pokeusers:/code
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db

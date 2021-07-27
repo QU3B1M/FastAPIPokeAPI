@@ -7,9 +7,8 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /code/
 
+COPY . /code
 # Install dependencies 
 RUN pip install -r ./requirements.txt
-
-COPY . /code
 
 EXPOSE 8000
