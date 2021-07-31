@@ -16,23 +16,23 @@ class BaseRepository(Generic[DBModelType, InModelType, OutModelType]):
     pydantic: OutModelType
 
     @classmethod
-    async def get(cls, **kwargs) -> DBModelType:
+    async def get(cls, **kwargs) -> OutModelType:
         """Default method to Retrieve an DataBase Record"""
         return await cls.pydantic.from_queryset_single(cls.model.get_or_none(**kwargs))
 
     @classmethod
-    async def filter(cls, **kwargs) -> DBModelType:
+    async def filter(cls, **kwargs) -> OutModelType:
         """Default method to Filter Records"""
 
         return await cls.pydantic.from_queryset(cls.model.filter(**kwargs))
 
     @classmethod
-    async def get_all(cls) -> List[DBModelType]:
+    async def get_all(cls) -> List[OutModelType]:
         """Default method to Retrieve a List of DataBase Records."""
         return await cls.pydantic.from_queryset(cls.model.all())
 
     @classmethod
-    async def create(cls, obj_in: InModelType) -> DBModelType:
+    async def create(cls, obj_in: InModelType) -> OutModelType:
         """Default method to Create an DataBase Record."""
 
         if not isinstance(obj_in, dict):
@@ -42,7 +42,7 @@ class BaseRepository(Generic[DBModelType, InModelType, OutModelType]):
         return await cls.pydantic.from_tortoise_orm(await cls.model.create(**obj_in))
 
     @classmethod
-    async def update(cls, obj_in: OutModelType, **kwargs) -> DBModelType:
+    async def update(cls, obj_in: OutModelType, **kwargs) -> None:
         """Default method to Update an DataBase Record."""
 
         if not isinstance(obj_in, dict):
