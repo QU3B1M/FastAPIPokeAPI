@@ -48,6 +48,7 @@ class Auth:
 
     @classmethod
     def encode_token(cls, user_id: Any) -> str:
+        """Generates a JWT Token."""
         payload = {
             "exp": datetime.utcnow() + timedelta(days=0, minutes=5),
             "iat": datetime.utcnow(),
@@ -57,6 +58,7 @@ class Auth:
 
     @staticmethod
     def decode_token(token: str) -> str:
+        """Retrieve an decoded JWT Token."""
         try:
             payload = jwt.decode(
                 token, settings.secret_key, algorithms=[settings.algorithm]
@@ -69,6 +71,7 @@ class Auth:
 
     @classmethod
     def login(cls, user_id: Any) -> str:
+        """Retrieves a JWT Token."""
         token = cls.encode_token(user_id)
         return Token(access_token=token)
 
@@ -76,4 +79,5 @@ class Auth:
     def auth_wrapper(
         cls, auth: HTTPAuthorizationCredentials = Security(_security)
     ) -> str:
+        """Dependency to authenticate Users."""
         return cls.decode_token(auth.credentials)

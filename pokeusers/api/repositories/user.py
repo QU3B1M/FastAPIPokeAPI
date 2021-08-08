@@ -12,6 +12,7 @@ class UserRepository(BaseRepository[User, UserIn, UserFull]):
 
     @classmethod
     async def create(cls, usr_in: UserIn) -> UserFull:
+        """Creates a User with his password hashed."""
         hashed_pwd: str = Auth.hash_password(usr_in.password)
 
         return await User.create(**usr_in.dict(), hashed_password=hashed_pwd)
