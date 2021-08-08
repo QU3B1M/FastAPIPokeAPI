@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
+from . import auth
 
-# Here we import the api routers to add to the main
 
 api_routers = APIRouter()
+
+api_routers.include_router(auth.router)

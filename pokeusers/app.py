@@ -3,7 +3,7 @@ from fastapi import FastAPI
 
 from api import api_routers, init_database
 from settings import Settings
-import random
+
 
 settings = Settings()
 app = FastAPI()
@@ -18,6 +18,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
-        port=8001,
+        port=8002,
         reload=True if settings.app_mode == "Development" else False,
     )
