@@ -2,20 +2,20 @@ version: "3.7"
 
 services:
   # Starts the PostgreSQL DataBase
-  db:
+  pokedb:
     image: postgres:12
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=api
+      - POSTGRES_DB=pokeapi
     ports:
       - "5432:5432"
   # Starts the pgadmin
-  pgadmin:
+  pokepgadmin:
     image: dpage/pgadmin4
     depends_on:
-      - db
+      - pokedb
     environment:
       - PGADMIN_DEFAULT_EMAIL=pokeapi@poke.mon
       - PGADMIN_DEFAULT_PASSWORD=pokemon
@@ -31,15 +31,35 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - pokedb
+  # Starts the users db
+  usersdb:
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=pokeusers
+    ports:
+      - "5433:5433"
+  # Starts the pgadmin
+  userspgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - usersdb
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pokeapi@poke.mon
+      - PGADMIN_DEFAULT_PASSWORD=pokemon
+    ports:
+      - "5051:81"
   # Starts the UsersAPI
-  users:
+  pokeusers:
     build: pokeusers/
     restart: always
     command: bash -c "python3 app.py"
     volumes:
       - ./pokeusers:/code
     ports:
-      - "8001:8000"
+      - "8002:8002"
     depends_on:
-      - db
+      - usersdb

@@ -1,8 +1,8 @@
 from typing import List
 
-from .base import BaseRepository
 from api.database.schemas import Pokemon, PokeType, PokeMove
 from api.models import PokemonIn, PokemonOut, PokemonUpdate
+from .base import BaseRepository
 
 
 class PokemonRepository(BaseRepository[Pokemon, PokemonIn, PokemonOut]):
