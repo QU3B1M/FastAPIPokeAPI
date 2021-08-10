@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
-from fastapi import HTTPException, status, Security
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import HTTPException, status
+from fastapi.security import HTTPBearer
 from jose import jwt
 from jose.exceptions import ExpiredSignatureError, JWTError
 from passlib.context import CryptContext
@@ -56,9 +56,11 @@ class Auth:
             payload = jwt.decode(
                 token, settings.secret_key, algorithms=[settings.algorithm]
             )
+            if payload["scope"] != "access_token":
+                raise CredentialException(detail="Invalid token scope.")
             return payload["sub"]
         except ExpiredSignatureError:
-            raise CredentialException(detail="Signature has expired")
+            raise CredentialException(detail="Signature has expired.")
         except JWTError as e:
             raise CredentialException(detail=str(e))
 
@@ -79,11 +81,11 @@ class Auth:
                 refresh_token, settings.secret_key, algorithms=[settings.algorithm]
             )
             if payload["scope"] != "refresh_token":
-                raise HTTPException(status_code=401, detail="Invalid scope for token")
+                raise CredentialException(detail="Invalid token scope.")
             username = payload["sub"]
             return AccessToken(access_token=cls.encode_token(username))
         except ExpiredSignatureError:
-            raise CredentialException(detail="Refresh Token has expired")
+            raise CredentialException(detail="Refresh Token has expired.")
         except JWTError as e:
             raise CredentialException(detail=str(e))
 
@@ -93,10 +95,3 @@ class Auth:
         access_token = cls.encode_token(username)
         refresh_token = cls.encode_refresh_token(username)
         return LoginToken(access_token=access_token, refresh_token=refresh_token)
-
-    @classmethod
-    def authenticate(
-        cls, auth: HTTPAuthorizationCredentials = Security(security)
-    ) -> str:
-        """Dependency to authenticate Users."""
-        return cls.decode_token(auth.credentials)

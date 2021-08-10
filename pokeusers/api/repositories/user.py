@@ -1,6 +1,6 @@
 from api.database.schemas import User
 from api.models import UserIn, UserFull
-from api.security import Auth
+from api.core import Auth
 from .base import BaseRepository
 
 
