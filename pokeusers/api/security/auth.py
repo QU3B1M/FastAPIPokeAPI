@@ -1,31 +1,23 @@
 from datetime import datetime, timedelta
-from typing import Any, Optional
 
 from fastapi import HTTPException, status, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt
 from jose.exceptions import ExpiredSignatureError, JWTError
 from passlib.context import CryptContext
-from pydantic import BaseModel
 
 from settings import Settings
+from api.models import LoginToken, AccessToken
 
 
 settings = Settings()
-
-
-class Token(BaseModel):
-    """Model for the login output."""
-
-    token_type: Optional[str] = "Bearer"
-    access_token: str
 
 
 class CredentialException(HTTPException):
     def __init__(
         self,
         status_code: int = status.HTTP_401_UNAUTHORIZED,
-        detail: Any = "Could not validate credentials",
+        detail: str = "Could not validate credentials",
     ) -> None:
         self.headers = {"WWW-Authenticate": "Bearer"}
         super().__init__(status_code, detail=detail, headers=self.headers)
@@ -33,7 +25,7 @@ class CredentialException(HTTPException):
 
 class Auth:
 
-    _security = HTTPBearer()
+    security = HTTPBearer()
     _context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     @classmethod
@@ -47,12 +39,13 @@ class Auth:
         return cls._context.verify(plain_password, hashed_password)
 
     @classmethod
-    def encode_token(cls, user_id: Any) -> str:
+    def encode_token(cls, username: str) -> str:
         """Generates a JWT Token."""
         payload = {
             "exp": datetime.utcnow() + timedelta(days=0, minutes=5),
             "iat": datetime.utcnow(),
-            "sub": str(user_id),
+            "scope": "access_token",
+            "sub": str(username),
         }
         return jwt.encode(payload, settings.secret_key, algorithm=settings.algorithm)
 
@@ -70,14 +63,40 @@ class Auth:
             raise CredentialException(detail=str(e))
 
     @classmethod
-    def login(cls, user_id: Any) -> str:
-        """Retrieves a JWT Token."""
-        token = cls.encode_token(user_id)
-        return Token(access_token=token)
+    def encode_refresh_token(cls, username: str):
+        payload = {
+            "exp": datetime.utcnow() + timedelta(days=0, hours=10),
+            "iat": datetime.utcnow(),
+            "scope": "refresh_token",
+            "sub": str(username),
+        }
+        return jwt.encode(payload, settings.secret_key, settings.algorithm)
 
     @classmethod
-    def auth_wrapper(
-        cls, auth: HTTPAuthorizationCredentials = Security(_security)
+    def refresh_token(cls, refresh_token: str):
+        try:
+            payload = jwt.decode(
+                refresh_token, settings.secret_key, algorithms=[settings.algorithm]
+            )
+            if payload["scope"] != "refresh_token":
+                raise HTTPException(status_code=401, detail="Invalid scope for token")
+            username = payload["sub"]
+            return AccessToken(access_token=cls.encode_token(username))
+        except ExpiredSignatureError:
+            raise CredentialException(detail="Refresh Token has expired")
+        except JWTError as e:
+            raise CredentialException(detail=str(e))
+
+    @classmethod
+    def generate_tokens(cls, username: str) -> str:
+        """Retrieves the acces_token/refresh_token pair."""
+        access_token = cls.encode_token(username)
+        refresh_token = cls.encode_refresh_token(username)
+        return LoginToken(access_token=access_token, refresh_token=refresh_token)
+
+    @classmethod
+    def authenticate(
+        cls, auth: HTTPAuthorizationCredentials = Security(security)
     ) -> str:
         """Dependency to authenticate Users."""
         return cls.decode_token(auth.credentials)
