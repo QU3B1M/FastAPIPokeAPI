@@ -1,6 +1,8 @@
 version: "3.7"
 
 services:
+  # ---PokeAPI---
+
   # Starts the PostgreSQL DataBase
   pokedb:
     image: postgres:12
@@ -32,6 +34,9 @@ services:
       - "8000:8000"
     depends_on:
       - pokedb
+
+  # ---UsersAPI---
+
   # Starts the users db
   usersdb:
     image: postgres:12

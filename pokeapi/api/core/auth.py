@@ -2,7 +2,6 @@ from fastapi import HTTPException, status
 from fastapi.security import HTTPBearer
 from jose import jwt
 from jose.exceptions import ExpiredSignatureError, JWTError
-from passlib.context import CryptContext
 
 from settings import Settings
 
@@ -23,12 +22,6 @@ class CredentialException(HTTPException):
 class Auth:
 
     security = HTTPBearer()
-    _context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-    @classmethod
-    def verify_password(cls, plain_password: str, hashed_password: str) -> bool:
-        """Verifies a password."""
-        return cls._context.verify(plain_password, hashed_password)
 
     @staticmethod
     def decode_token(token: str) -> str:
