@@ -6,10 +6,12 @@ from settings import Settings
 
 
 settings = Settings()
-app = FastAPI()
+app = FastAPI(
+    openapi_url=f"{settings.api_prefix}/openapi.json",
+    docs_url=f"{settings.api_prefix}/docs",
+)
 
-
-app.include_router(api_routers)
+app.include_router(api_routers, prefix=settings.api_prefix)
 init_database(app=app)
 
 
@@ -18,6 +20,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
-        port=8002,
+        port=8000,
         reload=True if settings.app_mode == "Development" else False,
     )

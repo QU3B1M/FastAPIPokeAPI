@@ -4,10 +4,14 @@ from fastapi import FastAPI
 from api import api_routers, init_database
 from settings import Settings
 
-settings = Settings()
-app = FastAPI()
 
-app.include_router(api_routers)
+settings = Settings()
+app = FastAPI(
+    openapi_url=f"{settings.api_prefix}/openapi.json",
+    docs_url=f"{settings.api_prefix}/docs",
+)
+
+app.include_router(api_routers, prefix=settings.api_prefix)
 init_database(app=app)
 
 
