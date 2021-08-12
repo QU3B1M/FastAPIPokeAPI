@@ -12,27 +12,17 @@ services:
       - POSTGRES_DB=pokeapi
     ports:
       - "5432:5432"
-  # Starts the pgadmin
-  pokepgadmin:
-    image: dpage/pgadmin4
-    depends_on:
-      - pokedb
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=pokeapi@poke.mon
-      - PGADMIN_DEFAULT_PASSWORD=pokemon
-    ports:
-      - "5050:80"
-  # Starts the PokeAPI
+    # Starts the PokeAPI
   pokeapi:
     build: pokeapi/
     restart: always
     command: bash -c "python3 app.py"
     volumes:
       - ./pokeapi:/code
-    # ports:
-    #   - "8000:8000"
     depends_on:
       - pokedb
+    environment:
+      - database_url=postgres://postgres:postgres@pokedb/pokeapi
 
   # ---UsersAPI---
   # Starts the PostgreSQL DataBase
@@ -45,16 +35,6 @@ services:
       - POSTGRES_DB=pokeusers
     ports:
       - "5433:5433"
-  # Starts the pgadmin
-  userspgadmin:
-    image: dpage/pgadmin4
-    depends_on:
-      - usersdb
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=pokeapi@poke.mon
-      - PGADMIN_DEFAULT_PASSWORD=pokemon
-    ports:
-      - "5051:81"
   # Starts the UsersAPI
   pokeusers:
     build: pokeusers/
@@ -62,10 +42,22 @@ services:
     command: bash -c "python3 app.py"
     volumes:
       - ./pokeusers:/code
-    # ports:
-    #   - "8002:8000"
     depends_on:
       - usersdb
+    environment:
+      - database_url=postgres://postgres:postgres@usersdb/pokeusers
+
+  # ---PGAdmin---
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - pokedb
+      - usersdb
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pokeapi@poke.mon
+      - PGADMIN_DEFAULT_PASSWORD=pokemon
+    ports:
+      - "5050:80"
 
   # ---Nginx---
   nginx:
