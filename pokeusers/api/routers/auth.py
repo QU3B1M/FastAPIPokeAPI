@@ -4,7 +4,7 @@ from fastapi.security.http import HTTPAuthorizationCredentials
 from api.models import AuthClaim, LoginToken, AccessToken, UserIn, UserOut
 from api.repositories import UserRepository
 from api.database.schemas import User
-from api.security import Auth
+from api.core import Auth, Deps
 
 
 router = APIRouter()
@@ -31,5 +31,5 @@ async def login(auth: AuthClaim):
 
 
 @router.get("/")
-async def test(auth=Depends(Auth.authenticate)):
+async def test(auth=Depends(Deps.authorize)):
     return f"Hola Bolo {auth}"
