@@ -9,8 +9,8 @@ class Settings(BaseSettings):
     database_url: str = "sqlite://:memory:"  # Default is a sqlite in memory
     database_models: list = ["api.database.schemas"]
     app_mode: str = "Development"
-    app_name: str = "PokeAPI"
-    api_prefix: str = "/api/v1/pokeapi"
+    app_name: str = "PokeUsers"
+    api_prefix: str = "/api/v1/users"
     secret_key: str = "SuperSecretKey"
     algorithm: str = "HS256"
 

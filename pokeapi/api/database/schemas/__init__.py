@@ -1,3 +1,3 @@
-from .pokemon import Pokemon, PokeGenders
+from .pokemon import Pokemon
 from .poketype import PokeType
 from .pokemove import PokeMove, PokeMoveCategories
