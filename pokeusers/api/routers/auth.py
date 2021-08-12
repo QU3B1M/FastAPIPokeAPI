@@ -7,7 +7,7 @@ from api.database.schemas import User
 from api.core import Auth, Deps
 
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/register", response_model=UserOut)
@@ -28,8 +28,3 @@ async def login(auth: AuthClaim):
     if not user or not Auth.verify_password(auth.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid username and/or password.")
     return Auth.generate_tokens(user.username)
-
-
-@router.get("/")
-async def test(auth=Depends(Deps.authorize)):
-    return f"Hola Bolo {auth}"

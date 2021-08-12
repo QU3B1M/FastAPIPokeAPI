@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     database_models: list = ["api.database.schemas"]
     app_mode: str = "Development"
     app_name: str = "PokeAPI"
+    api_prefix: str = "/api/v1/pokeapi"
     secret_key: str = "SuperSecretKey"
     algorithm: str = "HS256"
 
