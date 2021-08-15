@@ -1,9 +1,9 @@
 package database
 
 import (
-	"log"
-	"digiapi/config"
 	"digiapi/api/models"
+	"digiapi/config"
+	"log"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -23,7 +23,7 @@ var DataBase = Connect()
 
 // Connect establishes the connection to the DataBase.
 func Connect() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(config.DataBase_URL), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(config.DataBaseURL), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error while connecting to DataBase.")
 		return db
@@ -43,5 +43,5 @@ func IsActive() bool {
 
 // init Initializes the migrations
 func init() {
-	DataBase.AutoMigrate(&models.Product{}, &models.Customer{}, &models.Order{})
+	DataBase.AutoMigrate(&models.Digimon{}, &models.Family{})
 }

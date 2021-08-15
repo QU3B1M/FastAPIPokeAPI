@@ -1,12 +1,13 @@
 package api
 
 import (
-	"log"
 	"digiapi/api/database"
+	"log"
 )
 
 // API initializes this API
-func Api() {
+func API() {
+	log.Print("Starting app")
 	if !database.IsActive() {
 		log.Fatal("No DB Connection.")
 		return

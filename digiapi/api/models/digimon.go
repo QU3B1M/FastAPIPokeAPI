@@ -1,15 +1,17 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
+// Digimon is a GORM DataBase Model.
 type Digimon struct {
 	gorm.Model
-	Name        string
-	Digievolution        string
-	Gender        	string
-	Level        string
-	ModeChange        string
-	Attribute        string
-	Family        string
-	Type        string
+	Name          string
+	Gender        Gender
+	Digievolution *Digimon `gorm:"many2many:digievlolutions"`
+	Attribute     Attribute
+	Family        Family `gorm:"foreignKey:Name"`
+	Level         Level
+	Type          string
 }

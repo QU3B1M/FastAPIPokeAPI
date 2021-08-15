@@ -8,10 +8,14 @@ import (
 )
 
 var (
-	DataBase_URL = getEnv("DATABASE_URL")
-	Port         = getEnv("PORT")
-	SecretKey    = getEnv("SECRET_KEY")
-	JWTKey       = []byte(getEnv("JWT_KEY"))
+	DataBaseURL = "file::memory:?cache=shared"
+	// Port        = getEnv("PORT")
+	// SecretKey   = getEnv("SECRET_KEY")
+	// JWTKey      = []byte(getEnv("JWT_KEY"))
+	// DataBase_URL = getEnv("DATABASE_URL")
+	// Port         = getEnv("PORT")
+	// SecretKey    = getEnv("SECRET_KEY")
+	// JWTKey       = []byte(getEnv("JWT_KEY"))
 )
 
 // getEnv Loads the .env file and reads the data
