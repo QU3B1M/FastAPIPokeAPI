@@ -46,7 +46,23 @@ services:
       - usersdb
     environment:
       - database_url=postgres://postgres:postgres@usersdb/usersapi
-
+  
+  # ---DigiAPI---
+  # Starts the DigiAPI
+  digiapi:
+    build: digiapi/
+    restart: always
+    # TODO: this should just call the compiled main
+    command: bash -c "go run main.go"
+    volumes:
+      - ./digiapi:/code
+    depends_on:
+      - usersdb
+    ports:
+      - "8000:8000"
+    # environment:
+    #   - database_url=postgres://postgres:postgres@digidb/digiapi
+  
   # ---PGAdmin---
   pgadmin:
     image: dpage/pgadmin4

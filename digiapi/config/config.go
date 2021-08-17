@@ -7,9 +7,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Config variables
 var (
-	DataBaseURL = "file::memory:?cache=shared"
-	// Port        = getEnv("PORT")
+	DataBaseURL = "test.db"
+	Port        = "8000"
 	// SecretKey   = getEnv("SECRET_KEY")
 	// JWTKey      = []byte(getEnv("JWT_KEY"))
 	// DataBase_URL = getEnv("DATABASE_URL")
