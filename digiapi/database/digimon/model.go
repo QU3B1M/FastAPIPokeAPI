@@ -1,7 +1,7 @@
 package digimon
 
 import (
-	"digiapi/database/family"
+	family "digiapi/database/digifamily"
 
 	"gorm.io/gorm"
 )

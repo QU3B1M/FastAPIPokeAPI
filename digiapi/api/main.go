@@ -1,6 +1,7 @@
 package api
 
 import (
+	"digiapi/api/routers"
 	"digiapi/config"
 	"log"
 	"net/http"
@@ -17,7 +18,8 @@ type API struct {
 // New inicialize a new server with configuration.
 func New() (*API, error) {
 	r := chi.NewRouter()
-
+	// Mounts the api routers.
+	r.Mount("/api/v1/digiapi", routers.New())
 	api := &http.Server{
 		Addr:         ":" + config.Port,
 		Handler:      r,

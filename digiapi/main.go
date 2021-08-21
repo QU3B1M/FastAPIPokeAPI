@@ -2,14 +2,12 @@ package main
 
 import (
 	"digiapi/api"
-	"digiapi/database"
 	"log"
 	"os"
 	"os/signal"
 )
 
 func main() {
-	database.Connect()
 
 	serv, err := api.New()
 	if err != nil {

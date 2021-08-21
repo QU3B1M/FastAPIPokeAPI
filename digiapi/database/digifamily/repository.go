@@ -1,4 +1,4 @@
-package family
+package digifamily
 
 import (
 	"context"

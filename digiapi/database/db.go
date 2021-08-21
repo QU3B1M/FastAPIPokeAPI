@@ -2,8 +2,8 @@ package database
 
 import (
 	"digiapi/config"
+	"digiapi/database/digifamily"
 	"digiapi/database/digimon"
-	"digiapi/database/family"
 	"log"
 	"sync"
 
@@ -46,7 +46,7 @@ func initDB() {
 		log.Fatal("Error while connecting to DB.")
 	}
 	log.Println("Connected to Database")
-	conn.AutoMigrate(&digimon.Model{}, &family.Model{})
+	conn.AutoMigrate(&digimon.Model{}, &digifamily.Model{})
 	db = &DB{Conn: conn}
 }
 
