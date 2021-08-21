@@ -1,9 +1,9 @@
-package models
+package family
 
 import "gorm.io/gorm"
 
-// Family is a GORM DataBase Model.
-type Family struct {
+// Model is a GORM DataBase Model.
+type Model struct {
 	gorm.Model
 	Name         string
 	Abbreviation string

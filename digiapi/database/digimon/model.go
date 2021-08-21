@@ -1,4 +1,10 @@
-package models
+package digimon
+
+import (
+	"digiapi/database/family"
+
+	"gorm.io/gorm"
+)
 
 // Level or Generation.
 type Level string
@@ -35,3 +41,15 @@ const (
 	Female Gender = "female"
 	None   Gender = "none"
 )
+
+// Model is a GORM DataBase Model.
+type Model struct {
+	gorm.Model
+	Name          string
+	Gender        Gender
+	DigiEvolution *Model `gorm:"many2many:digievlolutions"`
+	Attribute     Attribute
+	Family        family.Model `gorm:"foreignKey:Name"`
+	Level         Level
+	Type          string
+}

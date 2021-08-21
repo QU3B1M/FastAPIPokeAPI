@@ -1,7 +1,6 @@
 package api
 
 import (
-	"digiapi/api/database"
 	"digiapi/config"
 	"log"
 	"net/http"
@@ -41,10 +40,10 @@ func (api *API) Close() error {
 func (api *API) Start() {
 	log.Print("Starting app")
 	log.Printf("API running on http://localhost%s", api.server.Addr)
-	if !database.IsActive() {
-		log.Fatal("No DB Connection.")
-		return
-	}
+	// if !database.IsActive() {
+	// 	log.Fatal("No DB Connection.")
+	// 	return
+	// }
 	log.Fatal(api.server.ListenAndServe())
 
 }
