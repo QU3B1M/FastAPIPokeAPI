@@ -18,8 +18,8 @@ type DigiFamilyRouter struct {
 
 // CreateHandler creates a DigiFamily using the Repository.
 func (dfr *DigiFamilyRouter) CreateHandler(w http.ResponseWriter, r *http.Request) {
-	var family digifamily.Model
-	err := json.NewDecoder(r.Body).Decode(&family)
+	var df digifamily.Model
+	err := json.NewDecoder(r.Body).Decode(&df)
 	if err != nil {
 		response.HTTPError(w, r, http.StatusBadRequest, err.Error())
 		return
@@ -28,14 +28,14 @@ func (dfr *DigiFamilyRouter) CreateHandler(w http.ResponseWriter, r *http.Reques
 	defer r.Body.Close()
 
 	ctx := r.Context()
-	err = dfr.Repository.Create(ctx, &family)
+	err = dfr.Repository.Create(ctx, &df)
 	if err != nil {
 		response.HTTPError(w, r, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	w.Header().Add("Location", fmt.Sprintf("%s%d", r.URL.String(), family.ID))
-	response.JSON(w, r, http.StatusCreated, response.Map{"digifamily": family})
+	w.Header().Add("Location", fmt.Sprintf("%s%d", r.URL.String(), df.ID))
+	response.JSON(w, r, http.StatusCreated, response.Map{"digifamily": df})
 }
 
 // GetAllHandler retrieves all the DigiFamilies
@@ -57,13 +57,13 @@ func (dfr *DigiFamilyRouter) GetOneHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	ctx := r.Context()
-	family, err := dfr.Repository.GetOne(ctx, uint(id))
+	df, err := dfr.Repository.GetOne(ctx, uint(id))
 	if err != nil {
 		response.HTTPError(w, r, http.StatusNotFound, err.Error())
 		return
 	}
 
-	response.JSON(w, r, http.StatusOK, response.Map{"digifamily": family})
+	response.JSON(w, r, http.StatusOK, response.Map{"digifamily": df})
 }
 
 // UpdateHandler updated a DigiFamily.
@@ -76,8 +76,8 @@ func (dfr *DigiFamilyRouter) UpdateHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	var family digifamily.Model
-	err = json.NewDecoder(r.Body).Decode(&family)
+	var df digifamily.Model
+	err = json.NewDecoder(r.Body).Decode(&df)
 	if err != nil {
 		response.HTTPError(w, r, http.StatusBadRequest, err.Error())
 		return
@@ -86,7 +86,7 @@ func (dfr *DigiFamilyRouter) UpdateHandler(w http.ResponseWriter, r *http.Reques
 	defer r.Body.Close()
 
 	ctx := r.Context()
-	err = dfr.Repository.Update(ctx, uint(id), family)
+	err = dfr.Repository.Update(ctx, uint(id), df)
 	if err != nil {
 		response.HTTPError(w, r, http.StatusNotFound, err.Error())
 		return

@@ -46,8 +46,8 @@ func (fm *DigiFamily) GetByName(ctx context.Context, name string) (digifamily.Mo
 }
 
 // Create a family record.
-func (fm *DigiFamily) Create(ctx context.Context, family *digifamily.Model) error {
-	result := fm.DB.Conn.Create(&family)
+func (fm *DigiFamily) Create(ctx context.Context, familyIn *digifamily.Model) error {
+	result := fm.DB.Conn.Create(&familyIn)
 	if result.Error != nil {
 		log.Fatal("Error Creating Digi-Family.")
 		return result.Error
@@ -56,8 +56,11 @@ func (fm *DigiFamily) Create(ctx context.Context, family *digifamily.Model) erro
 }
 
 // Update a family record.
-func (fm *DigiFamily) Update(ctx context.Context, id uint, family digifamily.Model) error {
-	result := fm.DB.Conn.Save(&family)
+func (fm *DigiFamily) Update(ctx context.Context, id uint, familyIn digifamily.Model) error {
+	// result := fm.DB.Conn.Save(&family)
+	var familyDB digifamily.Model
+	fm.DB.Conn.Find(&familyDB, id)
+	result := fm.DB.Conn.Model(&familyDB).Updates(familyIn)
 	if result.Error != nil {
 		log.Fatal("Error Updating Digi-Family.")
 		return result.Error

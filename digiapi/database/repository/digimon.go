@@ -12,21 +12,21 @@ type Digimon struct {
 	DB *database.DB
 }
 
-// GetAll the digimon records.
-func (dg *Digimon) GetAll(ctx context.Context) []digimon.Model {
-	var families []digimon.Model
-	result := dg.DB.Conn.Find(&families)
+// GetAll the digimonIn records.
+func (d *Digimon) GetAll(ctx context.Context) []digimon.Model {
+	var digimons []digimon.Model
+	result := d.DB.Conn.Find(&digimons)
 	if result.Error != nil {
-		log.Fatal("Error getting the Digimon.")
-		return families
+		log.Fatal("Error getting the Digimons.")
+		return digimons
 	}
-	return families
+	return digimons
 }
 
-// GetOne digimon record by ID.
-func (dg *Digimon) GetOne(ctx context.Context, id uint) (digimon.Model, error) {
+// GetOne digimonIn record by ID.
+func (d *Digimon) GetOne(ctx context.Context, id uint) (digimon.Model, error) {
 	var digimonOut digimon.Model
-	result := dg.DB.Conn.Find(&digimonOut, id)
+	result := d.DB.Conn.Find(&digimonOut, id)
 	if result.Error != nil {
 		log.Fatal("Error getting the Digimon.")
 		return digimonOut, result.Error
@@ -34,10 +34,10 @@ func (dg *Digimon) GetOne(ctx context.Context, id uint) (digimon.Model, error) {
 	return digimonOut, nil
 }
 
-// GetByName a digimon.
-func (dg *Digimon) GetByName(ctx context.Context, name string) (digimon.Model, error) {
+// GetByName a Digimon.
+func (d *Digimon) GetByName(ctx context.Context, name string) (digimon.Model, error) {
 	var digimonOut digimon.Model
-	result := dg.DB.Conn.Where("name = ?", name).Find(&digimonOut)
+	result := d.DB.Conn.Where("name = ?", name).Find(&digimonOut)
 	if result.Error != nil {
 		log.Fatal("Error getting the Digimon.")
 		return digimonOut, result.Error
@@ -45,9 +45,9 @@ func (dg *Digimon) GetByName(ctx context.Context, name string) (digimon.Model, e
 	return digimonOut, nil
 }
 
-// Create a digimon record.
-func (dg *Digimon) Create(ctx context.Context, digimonIn digimon.Model) error {
-	result := dg.DB.Conn.Create(&digimonIn)
+// Create a Digimon record.
+func (d *Digimon) Create(ctx context.Context, digimonIn *digimon.Model) error {
+	result := d.DB.Conn.Create(&digimonIn)
 	if result.Error != nil {
 		log.Fatal("Error Creating Digimon.")
 		return result.Error
@@ -55,9 +55,11 @@ func (dg *Digimon) Create(ctx context.Context, digimonIn digimon.Model) error {
 	return nil
 }
 
-// Update a digimon record.
-func (dg *Digimon) Update(ctx context.Context, digimonIn digimon.Model) error {
-	result := dg.DB.Conn.Save(&digimonIn)
+// Update a Digimon record.
+func (d *Digimon) Update(ctx context.Context, id uint, digimonIn digimon.Model) error {
+	var digimonDB digimon.Model
+	d.DB.Conn.Find(&digimonDB, id)
+	result := d.DB.Conn.Model(&digimonDB).Updates(digimonIn)
 	if result.Error != nil {
 		log.Fatal("Error Updating Digimon.")
 		return result.Error
@@ -65,9 +67,9 @@ func (dg *Digimon) Update(ctx context.Context, digimonIn digimon.Model) error {
 	return nil
 }
 
-// Delete a digimon record.
-func (dg *Digimon) Delete(ctx context.Context, id uint) error {
-	result := dg.DB.Conn.Delete(&digimon.Model{}, id)
+// Delete a Digimon record.
+func (d *Digimon) Delete(ctx context.Context, id uint) error {
+	result := d.DB.Conn.Delete(&digimon.Model{}, id)
 	if result.Error != nil {
 		log.Fatal("Error Deleting Digimon.")
 		return result.Error

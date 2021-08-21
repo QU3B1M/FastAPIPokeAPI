@@ -12,9 +12,11 @@ import (
 func New() http.Handler {
 	r := chi.NewRouter()
 
-	digifamilyrouter := &DigiFamilyRouter{Repository: &repository.DigiFamily{DB: database.Connect()}}
+	dfr := &DigiFamilyRouter{Repository: &repository.DigiFamily{DB: database.Connect()}}
+	dr := &DigimonRouter{Repository: &repository.Digimon{DB: database.Connect()}}
 
-	r.Mount("/digifamily", digifamilyrouter.Routes())
+	r.Mount("/family", dfr.Routes())
+	r.Mount("/digimon", dr.Routes())
 
 	return r
 }

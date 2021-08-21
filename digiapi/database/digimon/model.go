@@ -1,7 +1,7 @@
 package digimon
 
 import (
-	family "digiapi/database/digifamily"
+	"digiapi/database/digifamily"
 
 	"gorm.io/gorm"
 )
@@ -45,11 +45,23 @@ const (
 // Model is a GORM DataBase Model.
 type Model struct {
 	gorm.Model
-	Name          string
-	Gender        Gender
-	DigiEvolution *Model `gorm:"many2many:digievlolutions"`
-	Attribute     Attribute
-	Family        family.Model `gorm:"foreignKey:Name"`
-	Level         Level
-	Type          string
+	Name            string
+	Gender          Gender
+	Attribute       Attribute
+	DigiEvolutionID *uint  `gorm:"unique"`
+	DigiEvolution   *Model `gorm:"foreignkey:ID;association_foreignkey:DigiEvolutionID" json:"-"`
+	FamilyID        uint
+	Family          digifamily.Model
+	Level           Level
+	Type            string
+}
+
+// Tabler sets the Model tablename.
+type Tabler interface {
+	TableName() string
+}
+
+// TableName overrides the table name used by Digimon to `digimons`
+func (Model) TableName() string {
+	return "digimons"
 }
