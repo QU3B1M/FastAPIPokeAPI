@@ -11,6 +11,7 @@ import (
 var (
 	DataBaseURL = "test.db"
 	Port        = "8000"
+	APIPrefix   = "/api/v1/digiapi"
 	// SecretKey   = getEnv("SECRET_KEY")
 	// JWTKey      = []byte(getEnv("JWT_KEY"))
 	// DataBase_URL = getEnv("DATABASE_URL")

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi"
-	httpSwagger "github.com/swaggo/http-swagger"
+	"github.com/go-chi/chi/middleware"
 )
 
 // API is a base server configuration.
@@ -19,9 +19,10 @@ type API struct {
 // New inicialize a new server with configuration.
 func New() (*API, error) {
 	r := chi.NewRouter()
+	// Using middleware to log every request
+	r.Use(middleware.Logger)
 	// Mounts the api routers.
-	r.Mount("/swagger", httpSwagger.WrapHandler)
-	r.Mount("/api/v1/digiapi", routers.New())
+	r.Mount(config.APIPrefix, routers.New())
 	api := &http.Server{
 		Addr:         ":" + config.Port,
 		Handler:      r,

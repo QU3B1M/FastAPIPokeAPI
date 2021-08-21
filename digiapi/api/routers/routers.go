@@ -15,7 +15,7 @@ func New() http.Handler {
 	dfr := &DigiFamilyRouter{Repository: &repository.DigiFamily{DB: database.Connect()}}
 	dr := &DigimonRouter{Repository: &repository.Digimon{DB: database.Connect()}}
 
-	r.Mount("/family", dfr.Routes())
+	r.Mount("/digifamily", dfr.Routes())
 	r.Mount("/digimon", dr.Routes())
 
 	return r
