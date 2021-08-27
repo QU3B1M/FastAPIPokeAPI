@@ -1,3 +1,3 @@
-# PokeAPI done with FastAPI
+# PokeAPI DigiAPI 
 
 ## TODO: README
