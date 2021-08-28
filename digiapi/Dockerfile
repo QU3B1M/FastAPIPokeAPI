@@ -12,6 +12,8 @@ WORKDIR /code/
 # Copy all the files
 COPY . /code
 
-RUN go build
+RUN go build -o /digiapi
 
 EXPOSE 8000
+
+CMD [ "/digiapi" ]

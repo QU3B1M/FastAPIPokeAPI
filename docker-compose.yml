@@ -72,8 +72,6 @@ services:
   digiapi:
     build: digiapi/
     restart: always
-    # TODO: this should just call the compiled main
-    command: bash -c "go run main.go"
     volumes:
       - ./digiapi:/code
     depends_on:
