@@ -147,7 +147,7 @@ alembic/versions/*
 *.rej
 *.exe
 .*.swp
-core
+/digiapi/core
 .env
 *.env
 *.cgo*.go

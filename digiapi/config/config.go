@@ -1,35 +1,21 @@
 package config
 
 import (
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	// _ its needed to get vars from .env if it exists
+	_ "github.com/joho/godotenv/autoload"
 )
 
 // Config variables
 var (
-	DataBaseURL = "test.db"
-	Port        = "8000"
-	APIPrefix   = "/api/v1/digiapi"
+	DataBaseURL = os.Getenv("database_url")
+	Port        = os.Getenv("port")
+	APIPrefix   = os.Getenv("api_prefix")
+	SecretKey   = os.Getenv("secret_key")
+	// APIPrefix   = "/api/v1/digiapi"
 	// SecretKey   = getEnv("SECRET_KEY")
 	// JWTKey      = []byte(getEnv("JWT_KEY"))
-	// DataBase_URL = getEnv("DATABASE_URL")
-	// Port         = getEnv("PORT")
 	// SecretKey    = getEnv("SECRET_KEY")
 	// JWTKey       = []byte(getEnv("JWT_KEY"))
 )
-
-// getEnv Loads the .env file and reads the data
-func getEnv(name string) string {
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-	env := os.Getenv(name)
-	if env == "" {
-		panic("failed to get env for " + name)
-	}
-	return env
-}

@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     api_prefix: str = "/api/v1/pokeapi"
     secret_key: str = "SuperSecretKey"
     algorithm: str = "HS256"
+    port: int = 8000
 
     class Config:
         case_sensitive: bool = True

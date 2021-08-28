@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"digiapi/api/middleware"
 	"digiapi/database"
 	"digiapi/database/repository"
 	"net/http"
@@ -15,6 +16,7 @@ func New() http.Handler {
 	dfr := &DigiFamilyRouter{Repository: &repository.DigiFamily{DB: database.Connect()}}
 	dr := &DigimonRouter{Repository: &repository.Digimon{DB: database.Connect()}}
 
+	r.Use(middleware.Authorizator)
 	r.Mount("/digifamily", dfr.Routes())
 	r.Mount("/digimon", dr.Routes())
 

@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  # ---PokeAPI---
+  # -----PokeAPI-----
   # Starts the PostgreSQL DataBase
   pokedb:
     image: postgres:12
@@ -12,7 +12,8 @@ services:
       - POSTGRES_DB=pokeapi
     ports:
       - "5432:5432"
-    # Starts the PokeAPI
+
+  # Starts the PokeAPI
   pokeapi:
     build: pokeapi/
     restart: always
@@ -22,9 +23,12 @@ services:
     depends_on:
       - pokedb
     environment:
+      - api_prefix=/api/v1/pokeapi
       - database_url=postgres://postgres:postgres@pokedb/pokeapi
+      - port=8000
+      - secret_key=SuperSecretKey # this can be replace using a .env
 
-  # ---UsersAPI---
+  # -----UsersAPI-----
   # Starts the PostgreSQL DataBase
   usersdb:
     image: postgres:12
@@ -35,6 +39,7 @@ services:
       - POSTGRES_DB=usersapi
     ports:
       - "5433:5433"
+
   # Starts the UsersAPI
   usersapi:
     build: usersapi/
@@ -45,9 +50,24 @@ services:
     depends_on:
       - usersdb
     environment:
+      - api_prefix=/api/v1/users
       - database_url=postgres://postgres:postgres@usersdb/usersapi
+      - port=8000
+      - secret_key=SuperSecretKey # this can be replace using a .env
   
-  # ---DigiAPI---
+
+  # -----DigiAPI-----    
+  # Starts the PostgreSQL DataBase
+  digidb:
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=digiapi
+    ports:
+      - "5434:5434"
+
   # Starts the DigiAPI
   digiapi:
     build: digiapi/
@@ -57,13 +77,14 @@ services:
     volumes:
       - ./digiapi:/code
     depends_on:
-      - usersdb
-    ports:
-      - "8000:8000"
-    # environment:
-    #   - database_url=postgres://postgres:postgres@digidb/digiapi
-  
-  # ---PGAdmin---
+      - digidb
+    environment:
+      - api_prefix=/api/v1/digiapi
+      - database_url=host=digidb user=postgres password=postgres dbname=digiapi
+      - port=8000
+      - secret_key=SuperSecretKey # this can be replace using a .env
+      
+  # -----PGAdmin-----
   pgadmin:
     image: dpage/pgadmin4
     depends_on:
@@ -75,7 +96,7 @@ services:
     ports:
       - "5050:80"
 
-  # ---Nginx---
+  # -----Nginx-----
   nginx:
     image: nginx:latest
     ports:

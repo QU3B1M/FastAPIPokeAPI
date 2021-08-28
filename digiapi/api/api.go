@@ -19,8 +19,9 @@ type API struct {
 // New inicialize a new server with configuration.
 func New() (*API, error) {
 	r := chi.NewRouter()
-	// Using middleware to log every request
+	// Middlewares to implement Logger and Recover from panics.
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 	// Mounts the api routers.
 	r.Mount(config.APIPrefix, routers.New())
 	api := &http.Server{

@@ -7,7 +7,7 @@ import (
 	"log"
 	"sync"
 
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -41,7 +41,8 @@ func Connect() *DB {
 
 // initDB initialize the db variable with the connection to the database.
 func initDB() {
-	conn, err := gorm.Open(sqlite.Open(config.DataBaseURL), &gorm.Config{})
+	// conn, err := gorm.Open(sqlite.Open(config.DataBaseURL), &gorm.Config{})
+	conn, err := gorm.Open(postgres.Open(config.DataBaseURL), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error while connecting to DB.")
 	}
