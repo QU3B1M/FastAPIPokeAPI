@@ -1,3 +1,3 @@
-# PokeAPI DigiAPI 
+# MicroMonsters
 
 ## TODO: README
