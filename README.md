@@ -1,4 +1,6 @@
-# MicroMonsters
+# Go and Python MicroMonsters
+
+A microservice structured backend developed using Golang and Python
 
 ## TODO: README
 
