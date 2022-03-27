@@ -1,3 +1,7 @@
-# PokeAPI DigiAPI 
+# MicroMonsters
 
 ## TODO: README
+
+## License
+
+This project is licensed under the [MIT license](LICENSE).
